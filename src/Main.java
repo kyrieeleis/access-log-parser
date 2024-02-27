@@ -7,7 +7,7 @@ public class Main {
         System.out.println("Введите второе число:");
         int secondnumber = new Scanner(System.in).nextInt();
         int sum = firstnumber + secondnumber;
-        int difference = firstnumber-secondnumber;
+        int difference = secondnumber-firstnumber;
         int product = firstnumber*secondnumber;
         double quotient = firstnumber/secondnumber;
         System.out.println("Сумма введенных чисел: " + sum);
