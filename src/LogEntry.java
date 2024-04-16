@@ -3,7 +3,7 @@ import java.time.LocalDateTime;
 public class LogEntry {
     private final String ipAddress;
     private final LocalDateTime dateTime;
-    private final String httpMethod;
+    private final HttpMethods httpMethod;
     private final String path;
     private final int statusCode;
     private final int bytesSent;
@@ -14,7 +14,7 @@ public class LogEntry {
         String[] fields = line.split(" ");
         this.ipAddress = fields[0];
         this.dateTime = LocalDateTime.parse(fields[3]);
-        this.httpMethod = fields[5].replace("\"", "");
+        this.httpMethod = HttpMethods.valueOf(fields[5].replace("\"", ""));
         this.path = fields[6].replace("\"", "");
         this.statusCode = Integer.parseInt(fields[8]);
         this.bytesSent = Integer.parseInt(fields[9]);
@@ -30,7 +30,7 @@ public class LogEntry {
         return dateTime;
     }
 
-    public String getHttpMethod() {
+    public HttpMethods getHttpMethod() {
         return httpMethod;
     }
 
