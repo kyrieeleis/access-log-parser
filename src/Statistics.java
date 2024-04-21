@@ -7,6 +7,9 @@ public class Statistics {
     private LocalDateTime maxTime;
 
     public Statistics(){
+        this.minTime = null;
+        this.maxTime = null;
+        this.totalTraffic = 0;
     }
 
 
