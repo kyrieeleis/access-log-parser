@@ -29,5 +29,6 @@ public class Statistics {
         }
         return totalTraffic / difference;
     }
+    publ
 
 }

@@ -4,8 +4,8 @@ import static java.util.Collections.replaceAll;
 
 
 public class UserAgent {
-    public String operatingSystem;
-    public String browser;
+    private String operatingSystem;
+    private String browser;
 
     public UserAgent(String userAgent) {
         String[] parts = userAgent.split(";");
