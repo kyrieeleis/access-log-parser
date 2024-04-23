@@ -7,6 +7,7 @@ public class Main {
     public static void main(String[] args) {
         int counter = 1;
         for (; ; ) {
+            System.out.println("Enter path to file: ");
             String path = new Scanner(System.in).nextLine();
             File file = new File(path);
             boolean fileExists = file.exists();

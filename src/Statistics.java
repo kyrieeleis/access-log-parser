@@ -10,6 +10,7 @@ public class Statistics {
     private LocalDateTime minTime;
     private LocalDateTime maxTime;
     private HashSet<String> uniquePaths;
+    private HashMap<String, Integer> operatingSystemRate;
 
     public Statistics() {
         this.minTime = null;
@@ -33,6 +34,9 @@ public class Statistics {
 
     public HashSet<String> getUniquePaths() {
         return new HashSet<>(new HashSet<>(uniquePaths));
+    }
+    public HashMap<String, Double> getOperatingSystemRate() {
+
     }
 
     public int getTrafficRate() {
