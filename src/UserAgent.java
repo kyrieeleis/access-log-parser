@@ -54,10 +54,13 @@ public class UserAgent {
     public String getOperatingSystem() {
         return operatingSystem;
     }
+    public String getBrowser(){
+        return browser;
+    }
 }
 
 enum Browser {
-    CHROME("Google Chrome"), EDGE("Microsoft Edge"), SAFARI("Safari"), OPERA("Opera"), FIREFOX("Mozilla Firefox"), OTHER("Other browser");
+    CHROME("Google Chrome"), EDGE("Microsoft Edge"), SAFARI("Safari"), OPERA("Opera"), FIREFOX("Mozilla Firefox"), OTHER("Other browsers");
 
     private String title;
 
