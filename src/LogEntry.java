@@ -1,25 +1,38 @@
 import java.time.LocalDateTime;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.Locale;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 public class LogEntry {
     private final String ipAddress;
     private final LocalDateTime dateTime;
     private final HttpMethods httpMethod;
     private final String path;
     private final int statusCode;
-    private final int bytesSent;
+    private final long bytesSent;
     private final String referer;
     private final String userAgent;
 
-    public LogEntry(String line){
-        String[] fields = line.split(" ");
-        this.ipAddress = fields[0];
-        this.dateTime = LocalDateTime.parse(fields[3]);
-        this.httpMethod = HttpMethods.valueOf(fields[5].replace("\"", ""));
-        this.path = fields[6].replace("\"", "");
-        this.statusCode = Integer.parseInt(fields[8]);
-        this.bytesSent = Integer.parseInt(fields[9]);
-        this.referer = fields[10].replace("\"", "");
-        this.userAgent = fields[12].replace("\"", "");
+    public LogEntry(String logString) {
+        String pattern = "(\\d+\\.\\d+\\.\\d+\\.\\d+) - - \\[(.*?)\\] \"(\\w+) (.*?)\" (\\d+) (\\d+) \"(.*?)\" \"(.*?)\"";
+        Pattern regex = Pattern.compile(pattern);
+        Matcher matcher = regex.matcher(logString);
+
+        if (matcher.matches()) {
+            this.ipAddress = matcher.group(1);
+            this.dateTime = LocalDateTime.parse(matcher.group(2), DateTimeFormatter.ofPattern("dd/MMM/yyyy:HH:mm:ss Z",  Locale.ENGLISH));
+            this.httpMethod = HttpMethods.valueOf(matcher.group(3));
+            this.path = matcher.group(4);
+            this.statusCode = Integer.parseInt(matcher.group(5));
+            this.bytesSent = Long.parseLong(matcher.group(6));
+            this.referer = matcher.group(7);
+            this.userAgent = matcher.group(8);
+        } else {
+            throw new IllegalArgumentException("Неверный формат строки: " + logString);
+        }
     }
 
     public String getIpAddress() {
@@ -42,7 +55,7 @@ public class LogEntry {
         return statusCode;
     }
 
-    public int getBytesSent() {
+    public long getBytesSent() {
         return bytesSent;
     }
 
