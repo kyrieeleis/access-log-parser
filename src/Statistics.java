@@ -2,8 +2,6 @@ import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.List;
-import java.util.stream.Collectors;
 
 public class Statistics {
     private int totalTraffic;
@@ -16,6 +14,8 @@ public class Statistics {
         this.minTime = null;
         this.maxTime = null;
         this.totalTraffic = 0;
+        this.uniquePaths = new HashSet<>();
+        this.operatingSystemRate = new HashMap<>();
     }
 
 
@@ -30,23 +30,37 @@ public class Statistics {
         if (o.getStatusCode() == 200) {
             uniquePaths.add(o.getPath());
         }
+        UserAgent ua = new UserAgent(o.getUserAgent());
+        if (operatingSystemRate.containsKey(ua.getOperatingSystem())) {
+            operatingSystemRate.put(ua.getOperatingSystem(), operatingSystemRate.get(ua.getOperatingSystem()) + 1);
+        } else {
+            operatingSystemRate.put(ua.getOperatingSystem(), 1);
+        }
     }
 
     public HashSet<String> getUniquePaths() {
         return new HashSet<>(new HashSet<>(uniquePaths));
     }
-    public HashMap<String, Double> getOperatingSystemRate() {
 
+    public HashMap<String, Double> getOperatingSystemRate() {
+        int total = operatingSystemRate.values().stream().mapToInt(Integer::intValue).sum();
+        HashMap<String, Double> result = new HashMap<>();
+        operatingSystemRate.forEach((key, value) -> {
+            result.put(key, (double) value / (double) total);
+        });
+        return result;
     }
 
     public int getTrafficRate() {
-        int difference = (int) minTime.until(maxTime, ChronoUnit.HOURS);
+        int difference = (int) ChronoUnit.HOURS.between(minTime, maxTime);
         if (difference == 0) {
             difference = 1;
+            System.out.println(difference);
         }
-        return totalTraffic / difference;
+        return Math.abs(totalTraffic / difference);
     }
 
 }
+
 
 
