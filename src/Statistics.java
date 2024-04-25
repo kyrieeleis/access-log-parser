@@ -77,7 +77,7 @@ public class Statistics {
             difference = 1;
             System.out.println(difference);
         }
-        return Math.abs(totalTraffic / difference);
+        return totalTraffic / difference;
     }
 
 }
