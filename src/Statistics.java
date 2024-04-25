@@ -79,6 +79,9 @@ public class Statistics {
         }
         return totalTraffic / difference;
     }
+    public void hourRate(){
+
+    }
 
 }
 
