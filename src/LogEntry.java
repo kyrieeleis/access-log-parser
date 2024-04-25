@@ -23,7 +23,7 @@ public class LogEntry {
 
         if (matcher.matches()) {
             this.ipAddress = matcher.group(1);
-            this.dateTime = LocalDateTime.parse(matcher.group(2), DateTimeFormatter.ofPattern("dd/MMM/yyyy:HH:mm:ss Z",  Locale.ENGLISH));
+            this.dateTime = LocalDateTime.parse(matcher.group(2), DateTimeFormatter.ofPattern("dd/MMM/yyyy:HH:mm:ss +0300",  Locale.ENGLISH));
             this.httpMethod = HttpMethods.valueOf(matcher.group(3));
             this.path = matcher.group(4);
             this.statusCode = Integer.parseInt(matcher.group(5));
