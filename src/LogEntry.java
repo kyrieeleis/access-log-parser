@@ -31,7 +31,7 @@ public class LogEntry {
             this.referer = matcher.group(7);
             this.userAgent = matcher.group(8);
         } else {
-            throw new IllegalArgumentException("Неверный формат строки: " + logString);
+            throw new IllegalArgumentException("Line doesn't match pattern" + logString);
         }
     }
 
