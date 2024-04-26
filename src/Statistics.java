@@ -11,6 +11,12 @@ public class Statistics {
     private HashSet<String> nonExistentPaths;
     private HashMap<String, Integer> operatingSystemRate;
     private HashMap<String, Integer> browserRate;
+    private int bots;
+    private int uniquePathsCounter;
+    private int nonExistentPathsCounter;
+    private int errorsCounter;
+    private int totalRequests;
+    private HashSet<String> uniqueVisitors;
 
     public Statistics() {
         this.minTime = null;
@@ -20,10 +26,19 @@ public class Statistics {
         this.nonExistentPaths = new HashSet<>();
         this.browserRate = new HashMap<>();
         this.operatingSystemRate = new HashMap<>();
+        this.bots = 0;
+        this.uniquePathsCounter = 0;
+        this.nonExistentPathsCounter = 0;
+        this.totalRequests = 0;
+        this.uniqueVisitors = new HashSet<>();
     }
 
 
     public void addEntry(LogEntry o) {
+        UserAgent ua = new UserAgent(o.getUserAgent());
+        if (!ua.isBot()) {
+            this.uniqueVisitors.add(o.getIpAddress());
+        } else bots++;
         this.totalTraffic += o.getBytesSent();
         if (minTime == null || o.getDateTime().isBefore(minTime)) {
             this.minTime = o.getDateTime();
@@ -31,10 +46,16 @@ public class Statistics {
         if (maxTime == null || o.getDateTime().isAfter(maxTime)) {
             this.maxTime = o.getDateTime();
         }
-        if (o.getStatusCode() == 200) {
+        if (o.getStatusCode() / 100 == 2) {
             uniquePaths.add(o.getPath());
-        }if (o.getStatusCode() == 404) {
+            uniquePathsCounter++;
+        }
+        if (o.getStatusCode() == 404) {
             nonExistentPaths.add(o.getPath());
+            nonExistentPathsCounter++;
+        }
+        if (o.getStatusCode() / 100 == 4 || o.getStatusCode() / 100 == 5) {
+            errorsCounter++;
         }
         UserAgent ua = new UserAgent(o.getUserAgent());
         if (operatingSystemRate.containsKey(ua.getOperatingSystem())) {
@@ -62,6 +83,7 @@ public class Statistics {
         });
         return result;
     }
+
     public HashMap<String, Double> getBrowserRate() {
         int total = browserRate.values().stream().mapToInt(Integer::intValue).sum();
         HashMap<String, Double> result = new HashMap<>();
@@ -79,8 +101,24 @@ public class Statistics {
         }
         return totalTraffic / difference;
     }
-    public void hourRate(){
 
+    public int hourRate(UserAgent ua) {
+        int result = 0;
+        int difference = (int) ChronoUnit.HOURS.between(minTime, maxTime);
+        if (!ua.isBot()) {
+            result = (totalRequests) / difference;
+        }
+        return result;
+    }
+
+    public int hourRateErrors() {
+        int difference = (int) ChronoUnit.HOURS.between(minTime, maxTime);
+        return errorsCounter / difference;
+    }
+
+    public int visitsPerUniqueUser() {
+        int uniqueUsers = (int) (uniqueVisitors.stream().map(value -> Integer.parseInt(value)).count());
+        return uniqueUsers / bots;
     }
 
 }
